@@ -1,4 +1,5 @@
-[원문:https://github.com/atlassian/react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
+[원문:https://github.com/atlassian/react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)<br>
+최종 번역 일자: 2017년08월23일(수) 22시00분 UTC+9 [원본](https://github.com/atlassian/react-beautiful-dnd/commit/f8b3530123ff67041a5ec1c007c43bcaac91ed15)
 
 # react-beautiful-dnd
 
@@ -32,30 +33,14 @@ React를 사용한 많은 드래그 앤 드랍 라이브러리가 있습니다. 
 
 ### Currently supported feature set(현재 지원하는 특징)
 
-- 단일 vertical 리스트 아이템 드래깅
+- vertical 리스트
+- horizontal 리스트
 - 한 페이지 안의 멀티 독립 리스트
 - 마우스 🐭 와 **키보드 🎹** 드래깅
+- 독립 중첩 리스트(리스트는 다른 리스트의 자식이 될 수 있습니다. 그러나 당신은 부모 리스트의 아이템을 자식 리스트로 드래그 할 수 없습니다.)
 - 가변 높이 아이템 (아이템은 서로 다른 높이를 가질수 있다.)
 - 커스텀 드래그 핸들 (일부 아이템만 드래그 할 수 있다.)
 - vertical 리스트는 scoll container가 될 수 있다. (스크롤 부모 컨테이너 없이) 혹은 자식이 scoll container가 될 수 있다. (역시 스크롤 가능한 부모 없다)
-
-### Short term backlog(단기 backlog)
-
-- horizontal 리스트 드래깅
-- vertical 리스트 아이템 이동 (드랍할 수 있는 위치 까지)
-
-### Medium term backlog(중기 backlog)
-
-- horizontal 리스트 아이템 이동
-- vertical 리스트 에서 horizontal 리스트로의 `드래그 이동`
-- 한번에 여러 아이템 드래깅
-
-### Long term backlog(장기 backlog)
-
-- 터치 지원
-- 프레임이 임계값 이하로 떨어질 경우 자동 애니메이션 비활성화.
-- 사용자 입력 없는 프로그래밍 방식 드래깅
-- 그리고 많은 것들!
 
 ## Basic usage example(기본 사용 예제)
 
@@ -330,17 +315,24 @@ class App extends React.Component {
 **Type information(타입 정보)**
 
 ```js
-onDragStart?: (id: DraggableId, location: DraggableLocation) => void
+onDragStart?: (initial: DragStart) => void
 
 // supporting types(지원하는 타입)
-type Id = string;
-type DroppableId: Id;
-type DraggableId: Id;
+type DragStart = {
+  draggableId: DraggableId,
+  type: TypeId,
+  source: DraggableLocation,
+}
+
 type DraggableLocation = {|
   droppableId: DroppableId,
   // the position of the draggable within a droppable(droppable 내에서 droppable 의 위치)
   index: number
 |};
+type Id = string;
+type DraggableId = Id;
+type DroppableId = Id;
+type TypeId = Id;
 ```
 
 ### `onDragEnd` (required 필수)
@@ -349,9 +341,10 @@ type DraggableLocation = {|
 
 그것은 드래그에 대한 모든 정보가 제공됩니다:
 
-### `result: DragResult`
+### `result: DropResult`
 
-- `result.draggableId`: 드래그한 `Draggable`의 id.
+- `result.draggableId`: 드래그 되었던 `Draggable`의 id.
+- `result.type`: 드래그 되었던 `Draggable`의 `type`.
 - `result.source`: `Draggable` 이 시작된 위치(location).
 - `result.destination`: `Draggable`이 끝난 위치(location). 만약에 `Draggable`이 시작한 위치와 같은 위치로 돌아오면 이 `destination`값은 `null`이 될것입니다.
 
@@ -372,14 +365,16 @@ onDragEnd: (result: DropResult) => void
 // supporting types(지원 타입)
 type DropResult = {|
   draggableId: DraggableId,
+  type: TypeId,
   source: DraggableLocation,
   // may not have any destination (drag to nowhere)(어떤 destination 도 없을 것입니다.(어디로도 드래그 되지 않습니다.))
   destination: ?DraggableLocation
 |}
 
 type Id = string;
-type DroppableId: Id;
-type DraggableId: Id;
+type DroppableId = Id;
+type DraggableId = Id;
+type TypeId = Id;
 type DraggableLocation = {|
   droppableId: DroppableId,
   // the position of the droppable within a droppable(droppable 동안 droppable의 position)
@@ -889,6 +884,13 @@ type StateSnapshot = {|
 | Safari (Mac)                        | Latest stable version on latest OS release supported |
 
 현재 모바일은 지원되지 않습니다. 그러나 터치 지원할 계획을 가지고 있습니다.
+
+## 번역
+
+이 라이브러리의 문서는 다른 언어로도 제공됩니다.
+- ![kr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/South-Korea.png) **Korean**: [leehyunggeun/react-beautiful-dnd](https://github.com/LeeHyungGeun/react-beautiful-dnd-kr)
+
+이 번역본들은 커뮤니티에 의해 운영되고 있으며 메인터네이어에 의해 리뷰받지 않았습니다. 해당 번역본을 업데이트하고 싶다면 해당 번역본에 대한 이슈를 제기하십시오.
 
 ## Author / maintainer
 
